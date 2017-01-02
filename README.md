@@ -1,92 +1,63 @@
 # totalDays
 #just testing stuff
 
-#Initial code for calculating days between two dates using Python. Too much code, but it works.
+#Updated code for calculating the number of days between two dates in Python. Followed suggestions from Udacity instructor.
 
-daysOfMonths = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-daysOfMonthsLeap = [ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-
-def leapYeartest(year): #Self explanatory, tests if a year is a leap year.
+def leapYeartest(year): #Leap year test...
   result = False
   if (year%4 == 0):
     result = True
     if (year%100 == 0 and year%400 != 0):
       result = False
   return result
-
-def daysofMonthSum(month1,day1,month2,year1): #Calculates the days from mm1/dd1 up to mm2/yy
-  daysOfMonths = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] 
-  daysOfMonthsLeap = [ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]  
-  int_x = month1-1
-  int_y = month1-1
-  sum = 0
-  if leapYeartest(year1) == True:
-    daysOfMonths = daysOfMonthsLeap
-  while (int_x < month2-1):
-      sum = sum + daysOfMonths[int_x]
-      int_x+=1
-  return sum-day1
-#month = 11
-#print daysofMonthSum(1,2,3,2012)
-
-
-#print leapYeartest(2400)
-
-def daysfromBirthday(month1,year1): #Calculates number of days from starting date until end of year
-  daysOfMonths = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-  daysOfMonthsLeap = [ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] 
-  month1 = month1-1
-  int_x = month1+1
-  sum = 0
-  if leapYeartest(year1) == True:
-    daysOfMonths = daysOfMonthsLeap
-  while (int_x < 12):
-      sum = sum + daysOfMonths[int_x]
-      int_x+=1
-  return sum
-print daysfromBirthday(6,2011)
-
-def daysuntilToday(month2,year2): #Calculates number of days from start of year until current date
-  daysOfMonths = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-  daysOfMonthsLeap = [ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] 
-  if leapYeartest(year2) == True:
-    daysOfMonths = daysOfMonthsLeap
-  month2 = month2-1
-  int_x = 0
-  sum = 0
-  while (int_x < month2):
-      sum = sum + daysOfMonths[int_x]
-      int_x+=1
-  return sum
-#print daysuntilToday(6,2012)
-
-def numberofLeapDays(year1,year2):#Calculates number of leap days between years
-  count = 0
-  if leapYeartest(year1) == True:
-    year1+=4
-  while year1 < year2:
-    if leapYeartest(year1) == True:
-      count+=1
-      year1+=4
-    else:
-      year1+=1
-  return count
   
-print numberofLeapDays(2011,2012)
-
-def daysBetweenDates(year1, month1, day1, year2, month2, day2): #Final solution.....blegh.
+  
+def daysInMonth(year,month): #Just returns days in the given month(+1 to feb if leap year)
   daysOfMonths = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-  daysOfMonthsLeap = [ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] 
-  if year1 < year2: #Gets the days if year1 is less than year2
-    if leapYeartest(year1) == True:
-      daysinMonth1 = daysOfMonthsLeap[month1-1]-day1
-    daysinMonth1 = daysOfMonths[month1-1]-day1
-    print daysinMonth1
-    result = daysfromBirthday(month1,year1) + daysuntilToday(month2,year2) + daysinMonth1 + day2 + numberofLeapDays(year1,year2) + (365*((year2-year1)-1))
-  elif month1 != month2: #Gets the days if both years are the same
-    result = daysofMonthSum(month1,day1,month2,year1) + day2
-  else: #Finally, gets the days if both months/year is same 
-    result = day2-day1
-  print result  
+  daysOfMonthsLeap = [ 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+  if leapYeartest(year):
+    return daysOfMonthsLeap[month-1]
+  return daysOfMonths[month-1]
+  
+#print daysInMonth(2016,12)
+
+def nextDay(year, month, day): #Returns the date of following day
+    if day < daysInMonth(year,month):
+        return year, month, day + 1
+    else:
+        if month == 12:
+            return year + 1, 1, 1
+        else:
+            return year, month + 1, 1
+
+
+def areDatesEqual(Date1,Date2):
+    return Date1 == Date2
+
+Date1 = (2012, 1, 2)
+Date2 = (2012, 1, 2)
+#print areDatesEqual(Date1,Date2)
+
+
+        
+def daysBetweenDates(year1, month1, day1, year2, month2, day2): #final procedure
+    """Returns the number of days between year1/month1/day1
+       and year2/month2/day2. Assumes inputs are valid dates
+       in Gregorian calendar, and the first date is not after
+       the second."""
+        
+    # YOUR CODE HERE!
+    numberofdays = 0
+    Date1 = (year1, month1, day1)
+    Date2 = (year2, month2, day2)
+    assert Date1 < Date2 #Makes sure input is valid
+    while areDatesEqual(Date1,Date2) == False: #Adds up all the days until current date is reached
+        nextDay(year1, month1, day1)
+        year1,month1,day1 = nextDay(year1, month1, day1)
+        Date1 = year1,month1,day1
+        numberofdays+=1
+        #print nextDay(year1,month1,day1)
+    return numberofdays 
+print daysBetweenDates(1900,1,1,1999,1,1) 
   
 #print daysBetweenDates(2012,3,24,2014,2,26)
