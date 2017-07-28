@@ -1,2 +1,0 @@
-# totalDays
-just testing stuff
